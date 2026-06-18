@@ -199,6 +199,9 @@ def executer_verification():
 
             # --- Gestion de la notification d'activité (Heartbeat) toutes les heures ---
             etat["ticks_since_heartbeat"] += 1
+
+            # Add this line right here to fix the lifetime counter:
+            etat["total_verifications"] = etat.get("total_verifications", 0) + 1
             
             # 12 ticks * 5 min = 60 min (1 heure)
             if etat["ticks_since_heartbeat"] >= 12:
