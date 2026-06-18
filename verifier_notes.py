@@ -188,7 +188,7 @@ def executer_verification():
                 if module in notes_actuelles:
                     # S'il n'avait pas été détecté/annoncé auparavant, c'est une nouveauté !
                     if module not in anciennes_notes:
-                        lignes_message.append(f"✅ La note du module *{module}* est postée.")
+                        lignes_message.append(f"✅ La note du module *{module}* est postée. ✅")
                         anciennes_notes[module] = True  # Marqué comme annoncé définitivement
 
             # S'il y a des nouveautés, on envoie l'alerte sans afficher la valeur numérique
