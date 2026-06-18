@@ -1,0 +1,42 @@
+name: Verification notes ENT
+
+on:
+  schedule:
+    # Toutes les 10 minutes, décalé de 4 min pour éviter le pic de charge au top de l'heure.
+    - cron: '4,14,24,34,44,54 * * * *'
+  workflow_dispatch: {}   # permet de lancer le check manuellement depuis l'onglet "Actions"
+
+permissions:
+  contents: write   # nécessaire pour que le job puisse committer etat_notes.json
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout du repo
+        uses: actions/checkout@v4
+
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Installer les dependances
+        run: pip install -r requirements.txt
+
+      - name: Lancer la verification
+        env:
+          ENT_IDENTIFIANT: ${{ secrets.ENT_IDENTIFIANT }}
+          ENT_MOT_DE_PASSE: ${{ secrets.ENT_MOT_DE_PASSE }}
+          WHATSAPP_PHONE: ${{ secrets.WHATSAPP_PHONE }}
+          GREENAPI_ID_INSTANCE: ${{ secrets.GREENAPI_ID_INSTANCE }}
+          GREENAPI_API_TOKEN: ${{ secrets.GREENAPI_API_TOKEN }}
+          GREENAPI_API_URL: ${{ secrets.GREENAPI_API_URL }}
+        run: python verifier_notes.py
+
+      - name: Sauvegarder l'etat (commit automatique)
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Mise a jour automatique de l'etat des notes"
+          file_pattern: etat_notes.json
