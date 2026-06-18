@@ -1,10 +1,7 @@
 name: Verification notes ENT
 
 on:
-  schedule:
-    # Toutes les 10 minutes, décalé de 4 min pour éviter le pic de charge au top de l'heure.
-    - cron: '4,14,24,34,44,54 * * * *'
-  workflow_dispatch: {}   # permet de lancer le check manuellement depuis l'onglet "Actions"
+  workflow_dispatch: {}   # Keeps the API trigger open for cron-job.org and manual clicks
 
 permissions:
   contents: write   # nécessaire pour que le job puisse committer etat_notes.json
