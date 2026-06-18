@@ -203,9 +203,9 @@ def executer_verification():
             # Add this line right here to fix the lifetime counter:
             etat["total_verifications"] = etat.get("total_verifications", 0) + 1
             
-            # 12 ticks * 5 min = 60 min (1 heure)
-            if etat["ticks_since_heartbeat"] >= 12:
-                heartbeat_text = "Le script fonctionne correctement en arrière-plan. (Vérification toutes les 5 min) 🟢"
+            # 24 ticks * 5 min = 120 min (1 heure)
+            if etat["ticks_since_heartbeat"] >= 24:
+                heartbeat_text = "2-Hour System Status Check\n\nThis is a 2-hour automated message informing you that the script is checking grades every 5 minutes.\n\nThis message serves as a verification to confirm that the system is still working correctly."
                 print("Envoi du message d'activité horaire.")
                 envoyer_whatsapp(heartbeat_text)
                 etat["ticks_since_heartbeat"] = 0  # Réinitialisation du compteur
