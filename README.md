@@ -2,7 +2,7 @@
 
 ## Ce qui a changé par rapport à ton script original
 
-- **Telegram → WhatsApp (via Green API)** : les notifications passent par [Green API](https://green-api.com), qui propose un plan "Developer" gratuit à vie (jusqu'à 3 chats — largement suffisant pour s'envoyer des messages à soi-même). Contrairement à CallMeBot, c'est un vrai service avec une infrastructure dédiée, pas un projet personnel d'un seul développeur — donc plus fiable dans le temps.
+- WhatsApp (via Green API)** : les notifications passent par [Green API](https://green-api.com), qui propose un plan "Developer" gratuit à vie (jusqu'à 3 chats — largement suffisant pour s'envoyer des messages à soi-même). C'est un vrai service avec une infrastructure dédiée, pas un projet personnel d'un seul développeur — donc plus fiable dans le temps.
 - **Boucle infinie → exécution unique** : le script ne fait plus `while True` + `sleep(300)`. Il fait une vérification puis s'arrête. C'est GitHub Actions qui le relance automatiquement toutes les ~10 minutes, même quand ton PC est éteint.
 - **Identifiants en dur → variables d'environnement** : plus de mot de passe écrit dans le code. Tout passe par des "Secrets" GitHub, chiffrés et jamais affichés, même si le repo est public.
 - **État fusionné au lieu d'écrasé** : si un passage de scraping a un souci ponctuel, une note déjà détectée n'est plus perdue.
