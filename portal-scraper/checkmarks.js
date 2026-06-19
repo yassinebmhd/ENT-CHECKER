@@ -13,30 +13,38 @@ const PASSWORD = process.env.CAS_PASSWORD;
 // GREEN-API Settings
 const GREEN_API_INSTANCE_ID = process.env.GREEN_API_INSTANCE_ID; 
 const GREEN_API_TOKEN_INSTANCE = process.env.GREEN_API_TOKEN_INSTANCE; 
-const TARGET_PHONE_NUMBER = process.env.TARGET_PHONE_NUMBER;
+const TARGET_PHONE_NUMBER = process.env.TARGET_PHONE_NUMBER; 
 
 const CACHE_FILE = path.join(__dirname, 'marks_cache.json');
 
+// Helper to create a delay between messages to prevent spam blocks
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 // Helper function to send WhatsApp text alerts via GREEN-API
-async function sendWhatsAppAlert(message) {
+async function sendWhatsAppAlert(target, message) {
   const url = `https://api.green-api.com/waInstance${GREEN_API_INSTANCE_ID}/sendMessage/${GREEN_API_TOKEN_INSTANCE}`;
+  
+  // Format dynamically based on whether it's a group ID or phone number
+  const chatId = target.includes('@') ? target : `${target}@c.us`;
+  
   const payload = {
-    chatId: TARGET_PHONE_NUMBER.includes('@') ? TARGET_PHONE_NUMBER : `${TARGET_PHONE_NUMBER}@c.us`,
+    chatId: chatId,
     message: message
   };
 
   try {
     await axios.post(url, payload);
-    console.log(`WhatsApp notification dispatched successfully!`);
+    console.log(`WhatsApp notification dispatched successfully to ${target}!`);
   } catch (error) {
-    console.error(`❌ Failed to deliver WhatsApp alert via GREEN-API:`, error.message);
+    console.error(`❌ Failed to deliver WhatsApp alert to ${target}:`, error.message);
   }
 }
 
 (async () => {
+  // Pass required flags to safely execute inside a headless server environment
   const browser = await puppeteer.launch({
      args: ['--no-sandbox', '--disable-setuid-sandbox']
-   });
+  });
   const page = await browser.browserContexts()[0].newPage();
   
   try {
@@ -125,17 +133,28 @@ async function sendWhatsAppAlert(message) {
       if (currentData && currentData.posted) {
         // Condition: Mark is live now, but wasn't in our previous check
         const wasPreviouslyPosted = cachedData && cachedData.posted;
-        if (!wasPreviouslyPosted) { 
-          alertsToSend.push(`🔔 *NEW MARK POSTED!*\n *Module:* ${modName}\n`); 
+        if (!wasPreviouslyPosted) {
+          alertsToSend.push(`🔔 *NEW MARK POSTED!*\n📚 *Module:* ${modName}\n💯 *Mark:* ${currentData.mark}\n📊 *Status:* ${currentData.status}`);
         }
       }
     });
 
     // --- STEP 6: DISPATCH NOTIFICATIONS AND SAVE STATE ---
     if (alertsToSend.length > 0) {
-      console.log(`Found ${alertsToSend.length} new update(s)! Sending notification alerts...`);
+      console.log(`Found ${alertsToSend.length} new update(s)! Processing notification loop...`);
+      
+      // Split the comma-separated secret list into an array of distinct targets
+      const recipients = TARGET_PHONE_NUMBER.split(',');
+
       for (const alertMsg of alertsToSend) {
-        await sendWhatsAppAlert(alertMsg);
+        for (const recipient of recipients) {
+          const cleanRecipient = recipient.trim();
+          if (cleanRecipient) {
+            await sendWhatsAppAlert(cleanRecipient, alertMsg);
+            // 2-second cooldown delay between messages to stay safe
+            await delay(2000); 
+          }
+        }
       }
     } else {
       console.log("No new grades posted since last check.");
