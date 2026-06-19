@@ -1,0 +1,49 @@
+name: Check University Marks
+
+on:
+  workflow_dispatch: # Allows you to click "Run workflow" manually on GitHub
+  repository_dispatch:
+    types: [trigger-scrape] # Allows external cron-job tools to trigger it via API webhook
+
+jobs:
+  run-scraper:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js environment
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Execute Scraper Script
+      env:
+        CAS_URL: ${{ secrets.CAS_URL }}
+        CAS_USERNAME: ${{ secrets.CAS_USERNAME }}
+        CAS_PASSWORD: ${{ secrets.CAS_PASSWORD }}
+        GREEN_API_INSTANCE_ID: ${{ secrets.GREEN_API_INSTANCE_ID }}
+        GREEN_API_TOKEN_INSTANCE: ${{ secrets.GREEN_API_TOKEN_INSTANCE }}
+        TARGET_PHONE_NUMBER: ${{ secrets.TARGET_PHONE_NUMBER }}
+      run: node ./portal-scraper/checkmarks.js
+
+    # Automatically commits the updated marks_cache.json file back to your repository main branch
+    - name: Commit and push changes if cache updated
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add ./portal-scraper/marks_cache.json || true
+        
+        # Check if there are actual changes before trying to commit
+        if git status --porcelain | grep -q "marks_cache.json"; then
+          git commit -m "Update marks state snapshot [skip ci]"
+          git push origin feature/gh-actions
+          echo "Cache updated and saved to GitHub branch."
+        else
+          echo "No grading updates detected. Skipping repository commit."
+        fi
