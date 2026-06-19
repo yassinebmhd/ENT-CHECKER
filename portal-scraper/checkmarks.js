@@ -34,7 +34,9 @@ async function sendWhatsAppAlert(message) {
 }
 
 (async () => {
-  const browser = await puppeteer.launch({ headless: true }); // Set to true to run cleanly in background/crontab
+  const browser = await puppeteer.launch({
+     args: ['--no-sandbox', '--disable-setuid-sandbox']
+   });
   const page = await browser.browserContexts()[0].newPage();
   
   try {
