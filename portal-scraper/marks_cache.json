@@ -1,8 +1,8 @@
 {
   "Programmation Objet avec C++": {
-    "posted": true,
-    "mark": "16,5",
-    "status": "V"
+    "posted": false,
+    "mark": null,
+    "status": null
   },
   "Bases de données relationnelles": {
     "posted": false,
