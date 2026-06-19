@@ -6,14 +6,14 @@ const axios = require('axios');
 // =========================================================================
 // CONFIGURATION: Set your credentials, portal URLs, and GREEN-API details
 // =========================================================================
-const CAS_URL = 'https://auth.univh2c.ma/cas5/login?service=https%3A%2F%2Fentv26.univh2c.ma%2FdossierPedago%2Flogin'; 
-const USERNAME = 'YASSINE.BOUMAHDI2-ETU';                     
-const PASSWORD = 'VVVocabulaire@123';                             
+const CAS_URL = 'XXXXXXX'; 
+const USERNAME = 'XXXXXXX';                     
+const PASSWORD = 'XXXXXXX';                             
 
 // GREEN-API Settings
-const GREEN_API_INSTANCE_ID = '7107655886'; // e.g., '1101abcdef'
-const GREEN_API_TOKEN_INSTANCE = '4bd04dee71ca4052aa5e8dc05ec4b172ea595e58e7004d4b85'; 
-const TARGET_PHONE_NUMBER = '212617699682'; // Phone number with country code (no spaces or '+' sign)
+const GREEN_API_INSTANCE_ID = 'XXXXXXX'; // e.g., '1101abcdef'
+const GREEN_API_TOKEN_INSTANCE = 'XXXXXXX'; 
+const TARGET_PHONE_NUMBER = 'XXXXXXX'; // Phone number with country code (no spaces or '+' sign)
 
 const CACHE_FILE = path.join(__dirname, 'marks_cache.json');
 
