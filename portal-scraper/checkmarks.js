@@ -125,8 +125,8 @@ async function sendWhatsAppAlert(message) {
       if (currentData && currentData.posted) {
         // Condition: Mark is live now, but wasn't in our previous check
         const wasPreviouslyPosted = cachedData && cachedData.posted;
-        if (!wasPreviouslyPosted) {
-          alertsToSend.push(`🔔 *NEW MARK POSTED!*\n *Module:* ${modName}\n);
+        if (!wasPreviouslyPosted) { 
+          alertsToSend.push(`🔔 *NEW MARK POSTED!*\n *Module:* ${modName}\n`); 
         }
       }
     });
