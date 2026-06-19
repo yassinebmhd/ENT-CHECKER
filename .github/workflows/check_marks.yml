@@ -44,7 +44,7 @@ jobs:
         # Check if there are actual changes before trying to commit
         if git status --porcelain | grep -q "marks_cache.json"; then
           git commit -m "Update marks state snapshot [skip ci]"
-          git push origin feature/gh-actions
+          git push origin main
           echo "Cache updated and saved to GitHub branch."
         else
           echo "No grading updates detected. Skipping repository commit."
