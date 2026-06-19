@@ -13,11 +13,12 @@ jobs:
     - name: Checkout repository code
       uses: actions/checkout@v4
 
-    - name: Set up Node.js environment
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-        cache: 'npm'
+    - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Or '22' / '24' if you want to clear the deprecation warning!
+          cache: 'npm'
+          cache-dependency-path: portal-scraper/package-lock.json
 
     - name: Install dependencies
       run: npm install
