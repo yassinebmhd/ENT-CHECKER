@@ -21,7 +21,7 @@ const CACHE_FILE = path.join(__dirname, 'marks_cache.json');
 async function sendWhatsAppAlert(message) {
   const url = `https://api.green-api.com/waInstance${GREEN_API_INSTANCE_ID}/sendMessage/${GREEN_API_TOKEN_INSTANCE}`;
   const payload = {
-    chatId: `${TARGET_PHONE_NUMBER}@c.us`,
+    chatId: `${TARGET_PHONE_NUMBER}@g.us`,
     message: message
   };
 
