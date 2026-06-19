@@ -6,14 +6,14 @@ const axios = require('axios');
 // =========================================================================
 // CONFIGURATION: Set your credentials, portal URLs, and GREEN-API details
 // =========================================================================
-const CAS_URL = 'XXXXXXX'; 
-const USERNAME = 'XXXXXXX';                     
-const PASSWORD = 'XXXXXXX';                             
+const CAS_URL = process.env.CAS_URL; 
+const USERNAME = process.env.CAS_USERNAME;                     
+const PASSWORD = process.env.CAS_PASSWORD;                     
 
 // GREEN-API Settings
-const GREEN_API_INSTANCE_ID = 'XXXXXXX'; // e.g., '1101abcdef'
-const GREEN_API_TOKEN_INSTANCE = 'XXXXXXX'; 
-const TARGET_PHONE_NUMBER = 'XXXXXXX'; // Phone number with country code (no spaces or '+' sign)
+const GREEN_API_INSTANCE_ID = process.env.GREEN_API_INSTANCE_ID; 
+const GREEN_API_TOKEN_INSTANCE = process.env.GREEN_API_TOKEN_INSTANCE; 
+const TARGET_PHONE_NUMBER = process.env.TARGET_PHONE_NUMBER;
 
 const CACHE_FILE = path.join(__dirname, 'marks_cache.json');
 
