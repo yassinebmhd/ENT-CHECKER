@@ -21,6 +21,7 @@ jobs:
           cache-dependency-path: 'portal-scraper/package-lock.json'
 
     - name: Install dependencies
+      working-directory: ./portal-scraper
       run: npm install
 
     - name: Execute Scraper Script
