@@ -117,7 +117,7 @@ async function sendTelegramAlert(message) {
       if (currentData && currentData.posted) {
         const wasPreviouslyPosted = cachedData && cachedData.posted;
         if (!wasPreviouslyPosted) {
-          alertsToSend.push(`🔔 *NEW MARK POSTED!*\n *Module:* ${modName}\n *Mark:* ${currentData.mark}\n *Status:* ${currentData.status}`);
+          alertsToSend.push(`🔔 *NEW MARK POSTED!*\n *Module:* ${modName}\n`);
         }
       }
     });
