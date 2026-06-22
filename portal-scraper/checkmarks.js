@@ -75,14 +75,24 @@ async function sendTelegramAlert(message) {
     
     for (const modName of targetModules) {
       if (currentResults[modName]?.posted && !cachedResults[modName]?.posted) {
-        const msg = `🔔 *NEW MARK POSTED!*\n *Module:* ${modName}\n`;
+        const data = currentResults[modName];
+
+        // Short message for Telegram
+        const telegramMsg = `🔔 *NEW MARK POSTED!*\n *Module:* ${modName}`;
+
+        // Detailed message for WhatsApp
+        const whatsappMsg = `🔔 *NEW MARK POSTED!*\n` +
+                            `*Module:* ${modName}\n` +
+                            `*Mark:* ${data.mark || 'N/A'}\n` +
+                            `*Status:* ${data.status || 'N/A'}`;
         
-        // Notify Telegram
-        await sendTelegramAlert(msg);
+        // Notify Telegram (Short)
+        await sendTelegramAlert(telegramMsg);
         
-        // Notify WhatsApp
-        const recipients = TARGET_PHONE_NUMBER.split(',');
-        for (const r of recipients) { await sendWhatsAppAlert(r.trim(), msg); await delay(2000); }
+        // Notify WhatsApp (Detailed)
+        await sendWhatsAppAlert(TARGET_PHONE_NUMBER.trim(), whatsappMsg);
+        
+        await delay(2000);
       }
     }
 
