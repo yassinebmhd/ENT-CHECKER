@@ -31,10 +31,23 @@ async function sendWhatsAppAlert(target, message) {
 
 async function sendTelegramAlert(message) {
   const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+  
   try {
-    await axios.post(url, { chat_id: TELEGRAM_CHAT_ID, text: message, parse_mode: "Markdown" });
-    console.log("Telegram sent successfully");
-  } catch (error) { console.error(`Telegram error: ${error.message}`); }
+    // We send the message as plain text to avoid Markdown parsing errors
+    await axios.post(url, { 
+      chat_id: TELEGRAM_CHAT_ID, 
+      text: message 
+    });
+    
+    console.log("Telegram notification sent successfully!");
+  } catch (error) {
+    // This logs the specific error returned by Telegram's API
+    if (error.response) {
+      console.error("Telegram error details:", JSON.stringify(error.response.data, null, 2));
+    } else {
+      console.error("Telegram error message:", error.message);
+    }
+  }
 }
 
 (async () => {
