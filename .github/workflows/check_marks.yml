@@ -1,53 +1,47 @@
 name: Check University Marks
 
 on:
-  workflow_dispatch: # Allows you to click "Run workflow" manually on GitHub
+  workflow_dispatch:
   repository_dispatch:
-    types: [trigger-scrape] # Allows external cron-job tools to trigger it via API webhook
+    types: [trigger-scrape]
 
 jobs:
   run-scraper:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-
     steps:
-    - name: Checkout repository code
-      uses: actions/checkout@v4
+      - name: Checkout repository code
+        uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: 'portal-scraper/package-lock.json'
+          cache-dependency-path: './portal-scraper/package-lock.json'
 
-    - name: Install dependencies
-      working-directory: ./portal-scraper
-      run: npm install
+      - name: Install dependencies
+        working-directory: ./portal-scraper
+        run: npm install
 
-    - name: Execute Scraper Script
-      env:
-        CAS_URL: ${{ secrets.CAS_URL }}
-        CAS_USERNAME: ${{ secrets.CAS_USERNAME }}
-        CAS_PASSWORD: ${{ secrets.CAS_PASSWORD }}
-        GREEN_API_INSTANCE_ID: ${{ secrets.GREEN_API_INSTANCE_ID }}
-        GREEN_API_TOKEN_INSTANCE: ${{ secrets.GREEN_API_TOKEN_INSTANCE }}
-        TARGET_PHONE_NUMBER: ${{ secrets.TARGET_PHONE_NUMBER }}
-      run: node ./portal-scraper/checkmarks.js
+      # This is the block you were trying to fix:
+      - name: Execute Scraper Script
+        working-directory: ./portal-scraper
+        env:
+          CAS_URL: ${{ secrets.CAS_URL }}
+          CAS_USERNAME: ${{ secrets.CAS_USERNAME }}
+          CAS_PASSWORD: ${{ secrets.CAS_PASSWORD }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: node checkmarks.js
 
-    # Automatically commits the updated marks_cache.json file back to your repository main branch
-    - name: Commit and push changes if cache updated
-      run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git add ./portal-scraper/marks_cache.json || true
-        
-        # Check if there are actual changes before trying to commit
-        if git status --porcelain | grep -q "marks_cache.json"; then
-          git commit -m "Update marks state snapshot [skip ci]"
-          git push origin main
-          echo "Cache updated and saved to GitHub branch."
-        else
-          echo "No grading updates detected. Skipping repository commit."
-        fi
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add ./portal-scraper/marks_cache.json || true
+          if git status --porcelain | grep -q "marks_cache.json"; then
+            git commit -m "Update marks state snapshot [skip ci]"
+            git push origin main
+          fi
