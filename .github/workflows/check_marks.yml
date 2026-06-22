@@ -1,5 +1,4 @@
 name: Check University Marks
-
 on:
   workflow_dispatch:
   repository_dispatch:
@@ -8,29 +7,23 @@ on:
 jobs:
   run-scraper:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    permissions: { contents: write }
     steps:
-      - name: Checkout repository code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: './portal-scraper/package-lock.json'
-
-      - name: Install dependencies
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm', cache-dependency-path: 'portal-scraper/package-lock.json' }
+      - run: npm install
         working-directory: ./portal-scraper
-        run: npm install
-
+      
       - name: Execute Scraper Script
         working-directory: ./portal-scraper
         env:
           CAS_URL: ${{ secrets.CAS_URL }}
           CAS_USERNAME: ${{ secrets.CAS_USERNAME }}
           CAS_PASSWORD: ${{ secrets.CAS_PASSWORD }}
+          GREEN_API_INSTANCE_ID: ${{ secrets.GREEN_API_INSTANCE_ID }}
+          GREEN_API_TOKEN_INSTANCE: ${{ secrets.GREEN_API_TOKEN_INSTANCE }}
+          TARGET_PHONE_NUMBER: ${{ secrets.TARGET_PHONE_NUMBER }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: node checkmarks.js
@@ -40,12 +33,7 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add ./portal-scraper/marks_cache.json || true
-          
           if git status --porcelain | grep -q "marks_cache.json"; then
-            git commit -m "Update marks state snapshot [skip ci]"
-            # Pushes automatically to the branch currently running the workflow
-            git push origin HEAD:$GITHUB_REF_NAME
-            echo "Changes pushed to $GITHUB_REF_NAME"
-          else
-            echo "No changes detected."
+            git commit -m "Update marks [skip ci]"
+            git push origin main
           fi
