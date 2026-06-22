@@ -8,8 +8,8 @@
     "mark": ""
   },
   "Système d'exploitation 2": {
-    "posted": false,
-    "mark": null
+    "posted": true,
+    "mark": "16"
   },
   "Programmation Web 2": {
     "posted": false,
@@ -24,7 +24,7 @@
     "mark": ""
   },
   "Français": {
-    "posted": false,
-    "mark": null
+    "posted": true,
+    "mark": "10"
   }
 }
