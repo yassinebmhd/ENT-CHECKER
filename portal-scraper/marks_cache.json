@@ -1,37 +1,30 @@
 {
   "Programmation Objet avec C++": {
     "posted": true,
-    "mark": "16,5",
-    "status": "V"
+    "mark": "16,5"
   },
   "Bases de données relationnelles": {
     "posted": false,
-    "mark": null,
-    "status": null
+    "mark": ""
   },
   "Système d'exploitation 2": {
     "posted": false,
-    "mark": null,
-    "status": null
+    "mark": ""
   },
   "Programmation Web 2": {
     "posted": false,
-    "mark": null,
-    "status": null
+    "mark": ""
   },
   "Structures de données": {
     "posted": false,
-    "mark": null,
-    "status": null
+    "mark": ""
   },
   "Analyse Numérique": {
     "posted": false,
-    "mark": null,
-    "status": null
+    "mark": ""
   },
   "Français": {
     "posted": false,
-    "mark": null,
-    "status": null
+    "mark": ""
   }
 }
