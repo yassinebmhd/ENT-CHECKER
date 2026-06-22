@@ -25,7 +25,6 @@ jobs:
         working-directory: ./portal-scraper
         run: npm install
 
-      # This is the block you were trying to fix:
       - name: Execute Scraper Script
         working-directory: ./portal-scraper
         env:
@@ -41,7 +40,12 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add ./portal-scraper/marks_cache.json || true
+          
           if git status --porcelain | grep -q "marks_cache.json"; then
             git commit -m "Update marks state snapshot [skip ci]"
-            git push origin main
+            # Pushes automatically to the branch currently running the workflow
+            git push origin HEAD:$GITHUB_REF_NAME
+            echo "Changes pushed to $GITHUB_REF_NAME"
+          else
+            echo "No changes detected."
           fi
