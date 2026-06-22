@@ -75,7 +75,7 @@ async function sendTelegramAlert(message) {
     
     for (const modName of targetModules) {
       if (currentResults[modName]?.posted && !cachedResults[modName]?.posted) {
-        const msg = `🔔 *NEW MARK POSTED!*\n *Module:* ${modName}\n}`;
+        const msg = `🔔 *NEW MARK POSTED!*\n *Module:* ${modName}\n`;
         
         // Notify Telegram
         await sendTelegramAlert(msg);
